@@ -1,0 +1,53 @@
+.app { min-height: 100vh; display: flex; flex-direction: column; }
+
+.nav {
+  background: var(--bg-primary);
+  border-bottom: 0.5px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navInner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.brand i { font-size: 18px; }
+
+.navLinks { display: flex; gap: 4px; }
+
+.navBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  transition: background 0.1s, color 0.1s;
+}
+
+.navBtn i { font-size: 15px; }
+.navBtn:hover { background: var(--bg-secondary); color: var(--text-primary); }
+.navBtn.active { background: var(--bg-secondary); color: var(--text-primary); font-weight: 500; }
+
+.main { flex: 1; padding: 1.5rem 0 3rem; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }

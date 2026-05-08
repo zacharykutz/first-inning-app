@@ -1,0 +1,62 @@
+.wrap { position: relative; display: inline-block; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: 20px;
+  cursor: default;
+  user-select: none;
+}
+
+.badge i { font-size: 12px; }
+
+.high   { background: var(--nrfi-strong-bg); color: var(--nrfi-strong-text); }
+.medium { background: var(--tossup-bg);      color: var(--tossup-text);      }
+.low    { background: var(--yrfi-lean-bg);   color: var(--yrfi-lean-text);   }
+
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  right: 0;
+  width: 190px;
+  background: var(--bg-primary);
+  border: 0.5px solid var(--border-mid);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  font-size: 11px;
+  z-index: 50;
+  line-height: 1.5;
+}
+
+.tooltipTitle {
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 7px;
+}
+
+.tooltipRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+  border-top: 0.5px solid var(--border-subtle);
+}
+
+.tier {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 500;
+}
+
+.tier i { font-size: 12px; }
+
+.tier.high   { color: var(--nrfi-strong-text); }
+.tier.medium { color: var(--tossup-text);      }
+.tier.low    { color: var(--yrfi-lean-text);   }
+
+.tierDesc { color: var(--text-tertiary); }

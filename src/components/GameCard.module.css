@@ -1,0 +1,87 @@
+.card {
+  background: var(--bg-primary);
+  border: 0.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  transition: border-color .15s;
+}
+
+.card:hover { border-color: var(--border-mid); }
+.card.active { border-color: var(--border-strong); }
+
+.cardTop { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+
+.matchup { display: flex; align-items: center; gap: 8px; }
+
+.teamBlock { text-align: center; }
+
+.teamAbbr { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+
+.teamSP { font-size: 11px; color: var(--text-secondary); margin-top: 2px; white-space: nowrap; }
+
+.at { font-size: 13px; color: var(--text-tertiary); margin: 0 2px; }
+
+.scoreBadge { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+
+.nrfiPct { font-size: 26px; font-weight: 500; }
+
+.edgePill { font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 20px; }
+
+.splitsRow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.splitBlock { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 8px 10px; }
+
+.spName {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.miniStats { display: flex; gap: 10px; }
+
+.msLabel {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  margin-bottom: 2px;
+}
+
+.msVal { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+
+.note {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.note i { font-size: 13px; }
+
+.cardFooter { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+
+.gameTime { font-size: 11px; color: var(--text-tertiary); display: flex; align-items: center; gap: 4px; }
+
+.gameTime i { font-size: 13px; }
+
+.detailBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: none;
+  border: 0.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 4px 9px;
+  transition: background .1s;
+}
+
+.detailBtn i { font-size: 12px; }
+.detailBtn:hover { background: var(--bg-secondary); }
+.detailBtn.open { background: var(--bg-secondary); border-color: var(--border-mid); }
