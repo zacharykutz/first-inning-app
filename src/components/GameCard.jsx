@@ -41,7 +41,7 @@ export default function GameCard({ game, onOpenModal }) {
                 <div className={styles.msVal}>{game.awaySP_szn}</div>
               </div>
               <div className={styles.miniStat}>
-                <div className={styles.msLabel}>Bat L10</div>
+                <div className={styles.msLabel}>1st inn</div>
                 <div className={styles.msVal}>{game.awayBat_l10}</div>
               </div>
             </div>
@@ -58,7 +58,7 @@ export default function GameCard({ game, onOpenModal }) {
                 <div className={styles.msVal}>{game.homeSP_szn}</div>
               </div>
               <div className={styles.miniStat}>
-                <div className={styles.msLabel}>Bat L10</div>
+                <div className={styles.msLabel}>1st inn</div>
                 <div className={styles.msVal}>{game.homeBat_l10}</div>
               </div>
             </div>
