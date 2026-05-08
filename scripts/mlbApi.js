@@ -29,6 +29,41 @@ export async function fetchSchedule(date) {
   return games
 }
 
+/** 
+ * Fetch probable pitchers from the boxscore endpoint as a fallback.
+ * More reliable than the schedule hydration for same-day queries.
+ */
+export async function fetchProbablePitchers(gamePk) {
+  try {
+    const data = await get(`/game/${gamePk}/boxscore`)
+    const away = data.teams?.away?.pitchers?.[0]
+      ? await fetchPlayerInfo(data.teams.away.pitchers[0])
+      : null
+    const home = data.teams?.home?.pitchers?.[0]
+      ? await fetchPlayerInfo(data.teams.home.pitchers[0])
+      : null
+    return { away, home }
+  } catch {
+    return { away: null, home: null }
+  }
+}
+
+/** Fetch basic player info by ID */
+async function fetchPlayerInfo(playerId) {
+  try {
+    const data = await get(`/people/${playerId}`)
+    const p = data.people?.[0]
+    if (!p) return null
+    return {
+      id: p.id,
+      fullName: p.fullName,
+      pitchHand: p.pitchHand,
+    }
+  } catch {
+    return null
+  }
+}
+
 /** Pitcher's game log for the season — returns array of split entries */
 export async function fetchPitcherGameLog(pitcherId, season = 2026) {
   const data = await get(

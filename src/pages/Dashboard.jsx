@@ -34,7 +34,7 @@ export default function Dashboard() {
         <h1 className={styles.pageTitle}>First innings</h1>
         <div className={styles.datePill}>
           <i className="ti ti-calendar" aria-hidden="true" />
-          Thu, May 7 · 2026
+          {SUMMARY.dateDisplay ?? 'Today'}
         </div>
       </div>
 

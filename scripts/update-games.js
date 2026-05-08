@@ -14,6 +14,7 @@ import {
   fetchPitcherGameLog,
   fetchTeamGameLog,
   fetchLinescore,
+  fetchProbablePitchers,
 } from './mlbApi.js'
 import { computeNRFI, getEdge, confidenceTier } from './model.js'
 import { pitcherNrfiStats, teamOffenseStats, frac, lastStartInfo } from './splits.js'
@@ -118,8 +119,18 @@ async function main() {
   for (const game of schedule) {
     const awayTeam = game.teams?.away?.team
     const homeTeam = game.teams?.home?.team
-    const awayPitcher = game.teams?.away?.probablePitcher
-    const homePitcher = game.teams?.home?.probablePitcher
+    let awayPitcher = game.teams?.away?.probablePitcher ?? null
+    let homePitcher = game.teams?.home?.probablePitcher ?? null
+
+    // Fallback: if probable pitchers missing from schedule, try boxscore
+    if (!awayPitcher || !homePitcher) {
+      console.log(`  Probable pitchers missing, trying boxscore fallback...`)
+      const fallback = await fetchProbablePitchers(game.gamePk)
+      if (!awayPitcher && fallback.away) awayPitcher = fallback.away
+      if (!homePitcher && fallback.home) homePitcher = fallback.home
+    }
+
+    console.log(`  Away SP: ${awayPitcher?.fullName ?? 'TBD'} | Home SP: ${homePitcher?.fullName ?? 'TBD'}`)
 
     console.log(`Processing ${awayTeam?.abbreviation} @ ${homeTeam?.abbreviation}...`)
 
@@ -149,11 +160,21 @@ async function main() {
     // Compute pitcher stats
     const awaySpStats = awayPitcher
       ? pitcherNrfiStats(awayPitcherLog, linescoreCache, awayTeam.id)
-      : { nrfiRate: LEAGUE_AVG_NRFI, starts: 0, l10NrfiRate: LEAGUE_AVG_NRFI, l10NrfiCount: 0, l10Starts: 0, nrfiCount: 0 }
+      : { nrfiRate: LEAGUE_AVG_NRFI, starts: 0, l10NrfiRate: LEAGUE_AVG_NRFI, l10NrfiCount: 0, l10Starts: 0, nrfiCount: 0, gradedStarts: 0 }
 
     const homeSpStats = homePitcher
       ? pitcherNrfiStats(homePitcherLog, linescoreCache, homeTeam.id)
-      : { nrfiRate: LEAGUE_AVG_NRFI, starts: 0, l10NrfiRate: LEAGUE_AVG_NRFI, l10NrfiCount: 0, l10Starts: 0, nrfiCount: 0 }
+      : { nrfiRate: LEAGUE_AVG_NRFI, starts: 0, l10NrfiRate: LEAGUE_AVG_NRFI, l10NrfiCount: 0, l10Starts: 0, nrfiCount: 0, gradedStarts: 0 }
+
+    // Diagnostic logging for first game to verify data shape
+    if (gameId === 1 && awayPitcher) {
+      console.log(`  [diag] ${awayPitcher.fullName} raw log entries: ${awayPitcherLog.length}`)
+      if (awayPitcherLog[0]) {
+        const s = awayPitcherLog[0]
+        console.log(`  [diag] First entry fields: date=${s.date} gamePk=${s.game?.gamePk} gamesStarted=${s.stat?.gamesStarted} isHome=${s.isHome} team.id=${s.team?.id}`)
+      }
+      console.log(`  [diag] ${awayPitcher.fullName} stats: starts=${awaySpStats.starts} graded=${awaySpStats.gradedStarts} nrfi=${awaySpStats.nrfiCount} l10=${awaySpStats.l10NrfiCount}/${awaySpStats.l10Starts}`)
+    }
 
     // Compute team offense stats
     const awayBatStats = teamOffenseStats(awayTeamLog, linescoreCache, awayTeam.id)
