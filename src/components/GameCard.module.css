@@ -7,7 +7,6 @@
 }
 
 .card:hover { border-color: var(--border-mid); }
-.card.active { border-color: var(--border-strong); }
 
 .cardTop { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
 
@@ -84,4 +83,3 @@
 
 .detailBtn i { font-size: 12px; }
 .detailBtn:hover { background: var(--bg-secondary); }
-.detailBtn.open { background: var(--bg-secondary); border-color: var(--border-mid); }

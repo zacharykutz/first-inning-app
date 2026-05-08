@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { TODAY_GAMES, SUMMARY } from '../data/games.js'
 import GameCard from '../components/GameCard.jsx'
+import GameModal from '../components/GameModal.jsx'
 import styles from './Dashboard.module.css'
 
 const FILTERS = [
@@ -19,17 +20,12 @@ function filterGames(games, key) {
 
 export default function Dashboard() {
   const [filter, setFilter] = useState('all')
-  const [openId, setOpenId] = useState(null)
+  const [selectedGame, setSelectedGame] = useState(null)
 
   const visible = filterGames(TODAY_GAMES, filter)
 
-  function toggleDetail(id) {
-    setOpenId(prev => (prev === id ? null : id))
-  }
-
   function handleFilter(key) {
     setFilter(key)
-    setOpenId(null)
   }
 
   return (
@@ -89,11 +85,17 @@ export default function Dashboard() {
           <GameCard
             key={game.id}
             game={game}
-            isOpen={openId === game.id}
-            onToggle={() => toggleDetail(game.id)}
+            onOpenModal={setSelectedGame}
           />
         ))}
       </div>
+
+      {selectedGame && (
+        <GameModal
+          game={selectedGame}
+          onClose={() => setSelectedGame(null)}
+        />
+      )}
     </div>
   )
 }

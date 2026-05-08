@@ -1,13 +1,12 @@
 import { edgeColors } from '../utils/edge.js'
-import DetailDrawer from './DetailDrawer.jsx'
 import styles from './GameCard.module.css'
 
-export default function GameCard({ game, isOpen, onToggle }) {
+export default function GameCard({ game, onOpenModal }) {
   const { bg, text } = edgeColors(game.edge)
 
   return (
     <div id={`card-${game.id}`}>
-      <div className={`${styles.card} ${isOpen ? styles.active : ''}`}>
+      <div className={styles.card}>
         <div className={styles.cardTop}>
           <div className={styles.matchup}>
             <div className={styles.teamBlock}>
@@ -78,14 +77,12 @@ export default function GameCard({ game, isOpen, onToggle }) {
             <i className="ti ti-clock" aria-hidden="true" />
             {game.time} · {game.park}
           </span>
-          <button className={`${styles.detailBtn} ${isOpen ? styles.open : ''}`} onClick={onToggle}>
-            {isOpen ? 'Close' : 'Details'}
-            <i className={`ti ${isOpen ? 'ti-chevron-up' : 'ti-chevron-down'}`} aria-hidden="true" />
+          <button className={styles.detailBtn} onClick={() => onOpenModal(game)}>
+            Details
+            <i className="ti ti-arrow-up-right" aria-hidden="true" />
           </button>
         </div>
       </div>
-
-      {isOpen && <DetailDrawer game={game} />}
     </div>
   )
 }
