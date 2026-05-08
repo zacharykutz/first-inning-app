@@ -22,6 +22,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const LEAGUE_AVG_NRFI = 0.58
 
+// Verify fetch is available (Node 18+)
+if (typeof fetch === 'undefined') {
+  console.error('fetch is not available — requires Node 18+')
+  process.exit(1)
+}
+
 // ET offset — GitHub Actions runs in UTC
 function getTodayET() {
   const now = new Date()
@@ -85,8 +91,17 @@ async function processTeam(teamId, linescoreCache) {
 async function main() {
   const today = getTodayET()
   console.log(`Fetching games for ${today}...`)
+  console.log(`Node version: ${process.version}`)
+  console.log(`Working directory: ${process.cwd()}`)
 
-  const schedule = await fetchSchedule(today)
+  let schedule
+  try {
+    schedule = await fetchSchedule(today)
+  } catch (e) {
+    console.error('Failed to fetch schedule:', e.message)
+    process.exit(1)
+  }
+
   console.log(`Found ${schedule.length} games`)
 
   if (schedule.length === 0) {

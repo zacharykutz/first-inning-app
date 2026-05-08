@@ -2,11 +2,11 @@ name: Update data + deploy
 
 on:
   schedule:
-    - cron: '0 13 * * *'
-    - cron: '0 16 * * *'
-    - cron: '0 19 * * *'
-    - cron: '0 4 * * *'
-  workflow_dispatch:
+    - cron: '0 13 * * *'   # 9:00 AM ET (UTC-4)
+    - cron: '0 16 * * *'   # 12:00 PM ET
+    - cron: '0 19 * * *'   # 3:00 PM ET
+    - cron: '0 4 * * *'    # 12:00 AM ET (post-game history update)
+  workflow_dispatch:        # manual trigger from GitHub UI
 
 permissions:
   contents: write
@@ -18,9 +18,36 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  update-history:
+    name: Update history (midnight run only)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '0 4 * * *'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run history pipeline
+        run: node scripts/update-history.js
+
+      - name: Commit updated history
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/history.js
+          git diff --staged --quiet || git commit -m "chore: update history data [$(date -u '+%Y-%m-%d %H:%M UTC')]"
+          git push
+
   update-games:
     name: Update today's games
     runs-on: ubuntu-latest
+    needs: []
     steps:
       - uses: actions/checkout@v4
 
@@ -34,6 +61,15 @@ jobs:
 
       - name: Run games pipeline
         run: node scripts/update-games.js
+
+      - name: Verify output was written
+        run: |
+          if grep -q "Auto-generated" src/data/games.js; then
+            echo "games.js was updated successfully"
+          else
+            echo "ERROR: games.js was not updated — pipeline may have failed silently"
+            exit 1
+          fi
 
       - name: Commit updated games
         run: |
